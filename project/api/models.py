@@ -14,8 +14,8 @@ class Company(models.Model):
 
 
 class Review(models.Model):
-    RATING_CHOICES = (1, 2, 3, 4, 5)
-    rating = models.IntegerField(choices=RATING_CHOICES, default=1)
+    RATING_CHOICES = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
+    rating = models.IntegerField(choices=RATING_CHOICES, default=5)
     title = models.CharField(max_length=64)
     summary = models.CharField(max_length=10 * 1000)
     ip_address = models.GenericIPAddressField(protocol='both')
