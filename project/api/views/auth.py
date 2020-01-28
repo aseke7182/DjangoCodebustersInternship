@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework import status
+from api.serializers import UserSerializer
 
 
 class UserList(generics.ListAPIView):
@@ -28,7 +29,8 @@ def login(request):
     response = {
         'token': token.key,
         'username': username,
-        'email': email
+        'email': email,
+        'id': token.user.pk
     }
     return Response(response)
 
@@ -41,9 +43,12 @@ def logout(request):
 
 @api_view(['POST'])
 def signup(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    serialized = UserSerializer(data=request.data)
+    data = {}
+    if serialized.is_valid():
+        account = serialized.save()
+        data['username'] = account.username
+        data['email'] = account.email
+        return Response(data, status=status.HTTP_201_CREATED)
     else:
-        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
