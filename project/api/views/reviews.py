@@ -13,7 +13,21 @@ class AllReviews(generics.ListAPIView):
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
 
+
 class OwnReview(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        reviews = Review.objects.all()
+        queryset = reviews.filter(reviewer=self.request.user)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(reviewer=self.request.user)
+
+
+class ReviewInfo(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ReviewSerializer
 
@@ -33,4 +47,3 @@ class CompanyInfo(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
-
