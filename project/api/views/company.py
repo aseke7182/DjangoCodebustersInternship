@@ -10,16 +10,6 @@ from api.models import *
 from ipware import get_client_ip
 
 
-class ReviewInfo(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ReviewSerializer
-
-    def get_queryset(self):
-        reviews = Review.objects.all()
-        queryset = reviews.filter(reviewer=self.request.user)
-        return queryset
-
-
 class AllCompany(generics.ListCreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CompanySerializer

@@ -47,3 +47,12 @@ class OwnReview(generics.ListCreateAPIView):
         # print(request.data)
         return self.create(request, *args, **kwargs)
 
+
+class ReviewInfo(generics.RetrieveDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        reviews = Review.objects.all()
+        queryset = reviews.filter(reviewer=self.request.user)
+        return queryset
