@@ -1,9 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import timedelta
 from django.utils import timezone
 import socket
 from ipware import get_client_ip
+
+
+def good_date():
+    date = timezone.now() + timedelta(hours=6)
+    return date.strftime("%Y-%m-%d %H:%M")
 
 
 class Company(models.Model):
@@ -22,6 +27,6 @@ class Review(models.Model):
     title = models.CharField(max_length=64)
     summary = models.CharField(max_length=10 * 1000)
     ip_address = models.GenericIPAddressField(protocol='both', null=True)
-    submission_date = models.DateTimeField(default=timezone.now)
+    submission_date = models.DateTimeField(default=good_date)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=1)
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
