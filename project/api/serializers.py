@@ -42,4 +42,5 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        print(validated_data)
         return Review.objects.create(**validated_data)

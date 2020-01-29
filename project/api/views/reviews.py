@@ -10,15 +10,6 @@ from api.models import *
 from ipware import get_client_ip
 
 
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
 class AllReviews(generics.ListAPIView):
     permission_classes = (IsAdminUser,)
     serializer_class = ReviewSerializer
@@ -29,11 +20,30 @@ class OwnReview(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ReviewSerializer
 
+    @staticmethod
+    def get_client_ip(request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
     def get_queryset(self):
         reviews = Review.objects.all()
         queryset = reviews.filter(reviewer=self.request.user)
         return queryset
 
     def perform_create(self, serializer):
-        # print(get_client_ip(self.request))
-        serializer.save(reviewer=self.request.user)
+        # print("HERE")
+        # print(self.request.data)
+        serializer.save(reviewer=self.request.user, ip_address=self.request.data['ips'])
+
+    def post(self, request, *args, **kwargs):
+        # print(get_client_ip(request)[0])
+        # print(request)
+        # print(request.data)
+        request.data['ips'] = get_client_ip(request)[0]
+        # print(request.data)
+        return self.create(request, *args, **kwargs)
+
