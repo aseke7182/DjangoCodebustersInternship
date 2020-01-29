@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from api.models import Company, Review
+from ipware import get_client_ip
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -32,9 +33,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     ip_address = serializers.IPAddressField(read_only=True)
     submission_date = serializers.DateTimeField(read_only=True)
-    company = CompanySerializer()
+    company = CompanySerializer(read_only=True)
+    company_id = serializers.IntegerField(write_only=True)
     reviewer = UserSerializer(read_only=True)
 
     class Meta:
         model = Review
         fields = '__all__'
+
+    def create(self, validated_data):
+        return Review.objects.create(**validated_data)

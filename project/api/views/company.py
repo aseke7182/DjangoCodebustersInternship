@@ -10,22 +10,7 @@ from api.models import *
 from ipware import get_client_ip
 
 
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
-class AllReviews(generics.ListAPIView):
-    permission_classes = (IsAdminUser,)
-    serializer_class = ReviewSerializer
-    queryset = Review.objects.all()
-
-
-class OwnReview(generics.ListCreateAPIView):
+class ReviewInfo(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ReviewSerializer
 
@@ -34,6 +19,14 @@ class OwnReview(generics.ListCreateAPIView):
         queryset = reviews.filter(reviewer=self.request.user)
         return queryset
 
-    def perform_create(self, serializer):
-        # print(get_client_ip(self.request))
-        serializer.save(reviewer=self.request.user)
+
+class AllCompany(generics.ListCreateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()
+
+
+class CompanyInfo(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()

@@ -11,5 +11,4 @@ urlpatterns = [
     path('review/<int:pk>/', views.ReviewInfo.as_view()),
     path('company/', views.AllCompany.as_view()),
     path('company/<int:pk>/', views.CompanyInfo.as_view()),
-
 ]

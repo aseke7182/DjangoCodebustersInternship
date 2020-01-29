@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.utils import timezone
 import socket
+from ipware import get_client_ip
 
 
 class Company(models.Model):
@@ -19,8 +21,7 @@ class Review(models.Model):
     rating = models.IntegerField(choices=RATING_CHOICES, default=5)
     title = models.CharField(max_length=64)
     summary = models.CharField(max_length=10 * 1000)
-    ip_address = models.GenericIPAddressField(protocol='both', null=True,
-                                              default=socket.gethostbyname(socket.gethostname()))
-    submission_date = models.DateTimeField(default=datetime.now)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    ip_address = models.GenericIPAddressField(protocol='both', null=True)
+    submission_date = models.DateTimeField(default=timezone.now)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, default=1)
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
