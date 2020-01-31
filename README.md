@@ -3,7 +3,7 @@
 ### How to start working:
 - Download everything from requirements.txt 
         
-        $ pip freeze << requirements.txt
+        $ pip freeze -r requirements.txt
 - go in project folder, and wirte:
 
         $ python manage.py makemigrations

@@ -30,3 +30,12 @@ class Review(models.Model):
     submission_date = models.DateTimeField(default=good_date)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=1)
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+# Checking tests
+# class Animal(models.Model):
+#     name = models.CharField(max_length=20)
+#     sound = models.CharField(max_length=20)
+#
+#     def speak(self):
+#         return "The {} says {}".format(self.name, self.sound)

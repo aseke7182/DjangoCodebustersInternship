@@ -37,13 +37,16 @@ class OwnReview(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # print("HERE")
         # print(self.request.data)
+
         serializer.save(reviewer=self.request.user, ip_address=self.request.data['ips'])
 
     def post(self, request, *args, **kwargs):
         # print(get_client_ip(request)[0])
         # print(request)
         # print(request.data)
+        request.POST._mutable = True  # to make it editable
         request.data['ips'] = get_client_ip(request)[0]
+        # request.GET._mutable = False  # make it False once edit done
         # print(request.data)
         return self.create(request, *args, **kwargs)
 
