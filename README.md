@@ -49,7 +49,3 @@ body: {
 }
 
 /review/<int:pk>/ -> get, delete Review with (pk) id iff this review written by loggined user, methods: GET, DELETE, must be auth. with Token in header, no body
-
-
-
-Sorry for that horrible Documentation, haven't experienced before.
